@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { motion, useInView, type Transition } from "framer-motion"; // Removed AnimatePresence
+import { useState, useRef, useEffect } from "react";
+import { motion, useInView, type Transition } from "framer-motion";
 import {
   ArrowUpRight,
   LayoutTemplate,
@@ -101,7 +101,6 @@ const buttonSpring: Transition = {
 // --- Components ---
 export default function ServiceShowcase() {
   const [activeService, setActiveService] = useState<ServiceItem>(services[0]);
-  const [clickedButton, setClickedButton] = useState<string | null>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [imageKey, setImageKey] = useState(0);
 
@@ -115,15 +114,11 @@ export default function ServiceShowcase() {
   }, [isInView, hasAnimated]);
 
   const handleButtonClick = (serviceId: string) => {
-    setClickedButton(serviceId);
     const service = services.find((s) => s.id === serviceId);
     if (service) {
       setActiveService(service);
       setImageKey((prev) => prev + 1); // Force image refresh
     }
-    setTimeout(() => {
-      setClickedButton(null);
-    }, 300);
   };
 
   return (
