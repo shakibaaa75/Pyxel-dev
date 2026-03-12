@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useInView,
-  type Transition,
-} from "framer-motion";
+import { motion, useInView, type Transition } from "framer-motion"; // Removed AnimatePresence
 import {
   ArrowUpRight,
   LayoutTemplate,
@@ -159,7 +154,6 @@ export default function ServiceShowcase() {
         <div className="flex flex-col gap-4 w-[480px] max-w-full mx-auto xl:mx-0 shrink-0">
           {services.map((service, index) => {
             const isActive = activeService.id === service.id;
-            const isClicked = clickedButton === service.id;
 
             // Arrow rotation: 0deg for active button, -40deg for inactive
             const arrowRotation = isActive ? 0 : -40;

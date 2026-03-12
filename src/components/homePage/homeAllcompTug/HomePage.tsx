@@ -1,4 +1,3 @@
-import React from "react";
 import HeroSection from "../homeComponents/HeroSection";
 import TrustedBySection from "../homeComponents/TrustedBySection";
 import ServicesSection from "../homeComponents/ServicesSection";
