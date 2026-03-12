@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView, type Transition } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 

@@ -21,15 +21,6 @@ interface ServiceItem {
   image: string;
 }
 
-interface ServiceShowcaseProps {
-  title?: string;
-  highlightedWord?: string;
-  subtitle?: string;
-  buttonText?: string;
-  buttonLink?: string;
-  onButtonClick?: () => void;
-}
-
 // --- Data ---
 const services: ServiceItem[] = [
   {
@@ -108,13 +99,14 @@ const buttonSpring: Transition = {
 
 // --- Components ---
 export default function ServiceShowcase({
-  title = "Our",
-  highlightedWord = "Services",
-  subtitle = "Software Development Solutions",
   buttonText = "Get In Touch",
   buttonLink,
   onButtonClick,
-}: ServiceShowcaseProps) {
+}: {
+  buttonText?: string;
+  buttonLink?: string;
+  onButtonClick?: () => void;
+}) {
   const [activeService, setActiveService] = useState<ServiceItem>(services[0]);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [imageKey, setImageKey] = useState(0);
@@ -136,24 +128,6 @@ export default function ServiceShowcase({
       setActiveService(service);
       setImageKey((prev) => prev + 1);
     }
-  };
-
-  const renderAnimatedText = (text: string, baseDelay = 0) => {
-    return text.split("").map((letter, index) => {
-      const delay = baseDelay + index * 0.01;
-
-      return (
-        <span
-          key={index}
-          className={`inline-block transition-all duration-200 ease-out ${
-            isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-          style={{ transitionDelay: `${delay}s` }}
-        >
-          {letter === " " ? "\u00A0" : letter}
-        </span>
-      );
-    });
   };
 
   // Mobile/Tablet Image Component
