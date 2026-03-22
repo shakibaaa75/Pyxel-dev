@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { services } from "../../data/Servicesdata";
 import type { Service } from "../../data/Servicesdata";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 const smoothEase: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 

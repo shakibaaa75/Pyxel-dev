@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { blogPosts } from "../../data/BlogPost";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 function ArrowIcon({ className = "" }: { className?: string }) {
   return (
