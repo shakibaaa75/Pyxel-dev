@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { blogPosts } from "../../data/BlogPost";
+import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 // Types
 interface FormData {
@@ -67,6 +68,62 @@ function CheckCircleIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
     </svg>
   );
 }
@@ -143,6 +200,13 @@ export default function BlogSinglePage() {
   // Find the post by slug
   const post = blogPosts.find((p) => p.slug === slug);
 
+  // Custom breadcrumb items for blog post
+  const breadcrumbItems = [
+    { label: "Home", path: "/", isLast: false },
+    { label: "Blogs", path: "/blogs", isLast: false },
+    { label: post?.title || "Blog Post", path: "#", isLast: true },
+  ];
+
   useEffect(() => {
     console.log("BlogSinglePage loaded");
     console.log("Slug:", slug);
@@ -152,15 +216,15 @@ export default function BlogSinglePage() {
   // If post not found
   if (!post) {
     return (
-      <div className="bg-[#161616] min-h-screen flex items-center justify-center">
-        <div className="text-white text-center">
+      <div className="bg-[#161616] min-h-screen flex items-center justify-center font-['Montserrat']">
+        <div className="text-white text-center px-4">
           <h2 className="text-2xl font-bold mb-4">Post Not Found</h2>
           <p className="text-[#aaa] mb-4">
             The blog post you're looking for doesn't exist.
           </p>
           <Link
             to="/blogs"
-            className="px-6 py-3 bg-[#2979FF] text-white rounded-lg inline-block"
+            className="px-6 py-3 bg-[#2979FF] text-white rounded-lg inline-block hover:bg-[#1a65e0] transition-colors"
           >
             Back to Blogs
           </Link>
@@ -170,22 +234,21 @@ export default function BlogSinglePage() {
   }
 
   return (
-    <div className="bg-[#161616] min-h-screen pt-20">
-      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Title Section */}
-        <div className="bg-[#1e1e1e] rounded-[20px] p-8 sm:p-10 mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+    <div className="bg-[#161616] min-h-screen font-['Montserrat']">
+      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-12 sm:pb-16">
+        {/* Title Section - Original Design */}
+        <div className="bg-[#1e1e1e] rounded-[20px] p-6 sm:p-8 lg:p-10 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4 leading-tight">
             {post.title}
           </h1>
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <span>{post.date}</span>
-            <span>•</span>
-            <span className="text-[#2979FF]">{post.category}</span>
+          {/* Breadcrumb under title */}
+          <div className="mt-2">
+            <Breadcrumb customItems={breadcrumbItems} />
           </div>
         </div>
 
         {/* Featured Image */}
-        <div className="rounded-[20px] overflow-hidden mb-8 h-[300px] md:h-[420px]">
+        <div className="rounded-[20px] overflow-hidden mb-6 sm:mb-8 h-[250px] sm:h-[350px] md:h-[420px]">
           <img
             src={post.image}
             alt={post.title}
@@ -193,41 +256,66 @@ export default function BlogSinglePage() {
           />
         </div>
 
+        {/* Meta Information - Date, Read Time, Author, Category */}
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-gray-400 mb-8 sm:mb-10 pb-4 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <CalendarIcon />
+            <span>{post.date}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ClockIcon />
+            <span>5 min read</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <UserIcon />
+            <span>Admin</span>
+          </div>
+          <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
+          <div className="flex items-center gap-2">
+            <span className="text-[#2979FF] font-medium">{post.category}</span>
+          </div>
+        </div>
+
         {/* Content */}
-        <div className="space-y-6">
-          <p className="text-gray-300 text-base leading-relaxed">
+        <div className="space-y-5 sm:space-y-6">
+          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
             {post.content.intro1}
           </p>
-          <p className="text-gray-300 text-base leading-relaxed">
+          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
             {post.content.intro2}
           </p>
 
           {/* Quote */}
-          <div className="bg-[#2979FF] rounded-[16px] p-7">
-            <div className="flex gap-4">
-              <QuoteIcon />
-              <p className="text-white text-base leading-relaxed font-medium">
+          <div className="bg-[#2979FF] rounded-[16px] p-5 sm:p-6 md:p-7">
+            <div className="flex gap-3 sm:gap-4">
+              <div className="flex-shrink-0">
+                <QuoteIcon />
+              </div>
+              <p className="text-white text-sm sm:text-base leading-relaxed font-medium">
                 {post.content.quote}
               </p>
             </div>
           </div>
 
-          <p className="text-gray-300 text-base leading-relaxed">
+          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
             {post.content.body}
           </p>
 
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
             {post.content.subheading}
           </h2>
-          <p className="text-gray-300 text-base leading-relaxed">
+          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
             {post.content.subIntro}
           </p>
 
           {/* Bullets */}
-          <ul className="space-y-3">
+          <ul className="space-y-2 sm:space-y-3">
             {post.content.bullets.map((item, i) => (
-              <li key={i} className="flex items-start gap-3 text-gray-300">
-                <span className="mt-0.5">
+              <li
+                key={i}
+                className="flex items-start gap-2 sm:gap-3 text-gray-300 text-sm sm:text-base"
+              >
+                <span className="mt-0.5 flex-shrink-0">
                   <CheckCircleIcon />
                 </span>
                 <span>{item}</span>
@@ -235,48 +323,56 @@ export default function BlogSinglePage() {
             ))}
           </ul>
 
-          <p className="text-gray-300 text-base leading-relaxed">
+          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
             {post.content.closing}
           </p>
 
-          <div className="h-px bg-white/10 my-6" />
+          <div className="h-px bg-white/10 my-6 sm:my-8" />
 
           {/* Tags */}
-          <div className="flex flex-wrap items-center gap-4">
-            <span className="text-white font-semibold">Tags:</span>
-            {post.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-[#2979FF] text-white text-xs px-4 py-1.5 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <span className="text-white font-semibold text-sm sm:text-base">
+              Tags:
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="bg-[#2979FF] text-white text-xs px-3 sm:px-4 py-1.5 rounded-full hover:bg-[#1a65e0] transition-colors cursor-pointer"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* Social Links */}
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 sm:gap-4 pt-4">
             <a
               href="#"
               className="text-gray-400 hover:text-[#2979FF] transition-colors"
+              aria-label="Share on Instagram"
             >
               <SocialIcon name="Instagram" />
             </a>
             <a
               href="#"
               className="text-gray-400 hover:text-[#2979FF] transition-colors"
+              aria-label="Share on Facebook"
             >
               <SocialIcon name="Facebook" />
             </a>
             <a
               href="#"
               className="text-gray-400 hover:text-[#2979FF] transition-colors"
+              aria-label="Share on YouTube"
             >
               <SocialIcon name="YouTube" />
             </a>
             <a
               href="#"
               className="text-gray-400 hover:text-[#2979FF] transition-colors"
+              aria-label="Share on LinkedIn"
             >
               <SocialIcon name="LinkedIn" />
             </a>
@@ -284,9 +380,11 @@ export default function BlogSinglePage() {
         </div>
 
         {/* Comment Form */}
-        <div className="mt-12 mb-16">
-          <h3 className="text-white text-xl font-bold mb-2">Leave a Reply</h3>
-          <p className="text-gray-500 text-sm mb-6">
+        <div className="mt-10 sm:mt-12 mb-12 sm:mb-16">
+          <h3 className="text-white text-lg sm:text-xl font-bold mb-2">
+            Leave a Reply
+          </h3>
+          <p className="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6">
             Your email address will not be published. Required fields are marked
             *
           </p>
@@ -299,10 +397,10 @@ export default function BlogSinglePage() {
               onChange={(e) =>
                 setFormData({ ...formData, comment: e.target.value })
               }
-              className="w-full bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500"
+              className="w-full bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500 text-sm sm:text-base"
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               <input
                 type="text"
                 placeholder="Name *"
@@ -310,7 +408,7 @@ export default function BlogSinglePage() {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500"
+                className="bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500 text-sm sm:text-base"
               />
               <input
                 type="email"
@@ -319,7 +417,7 @@ export default function BlogSinglePage() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500"
+                className="bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500 text-sm sm:text-base"
               />
               <input
                 type="text"
@@ -328,7 +426,7 @@ export default function BlogSinglePage() {
                 onChange={(e) =>
                   setFormData({ ...formData, website: e.target.value })
                 }
-                className="bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500"
+                className="bg-[#1e1e1e] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#2979FF] transition-colors placeholder:text-gray-500 text-sm sm:text-base"
               />
             </div>
 
@@ -341,13 +439,13 @@ export default function BlogSinglePage() {
                 }
                 className="accent-[#2979FF] w-4 h-4"
               />
-              <span className="text-gray-400 text-sm">
+              <span className="text-gray-400 text-xs sm:text-sm">
                 Save my name, email, and website in this browser for the next
                 time I comment.
               </span>
             </label>
 
-            <button className="bg-[#2979FF] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#1a65e0] transition-all inline-flex items-center gap-2 mt-2">
+            <button className="bg-[#2979FF] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-[#1a65e0] transition-all inline-flex items-center gap-2 mt-2 text-sm sm:text-base">
               Post Comment <ArrowIcon />
             </button>
           </div>

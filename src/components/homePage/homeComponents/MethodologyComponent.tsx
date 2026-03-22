@@ -60,7 +60,7 @@ export default function MethodologyComponent() {
   }, [isInView, hasAnimated]);
 
   const toggleStep = (id: number) => {
-    setActiveStep(activeStep === id ? id : id);
+    setActiveStep(id);
   };
 
   const renderAnimatedText = (text: string, baseDelay = 0) => {
@@ -81,9 +81,11 @@ export default function MethodologyComponent() {
   };
 
   return (
+    // ✅ FIX: Removed overflow-x-hidden here — it was creating a scroll trap.
+    // Use clip-x on a non-scrolling parent instead if you need to hide overflow.
     <div
-      className="h-auto bg-[#161616] text-white py-12 sm:py-16 lg:py-20 overflow-x-hidden"
-      style={{ fontFamily: "Montserrat, sans-serif" }}
+      className="h-auto bg-[#161616] text-white py-12 sm:py-16 lg:py-20"
+      style={{ fontFamily: "Montserrat, sans-serif", clipPath: "inset(0)" }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');

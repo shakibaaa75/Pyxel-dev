@@ -1,0 +1,97 @@
+// components/Breadcrumb.tsx
+import { Link, useLocation } from "react-router-dom";
+
+interface BreadcrumbItem {
+  label: string;
+  path: string;
+  isLast?: boolean;
+}
+
+interface BreadcrumbProps {
+  customItems?: BreadcrumbItem[];
+  homeLabel?: string;
+  separator?: React.ReactNode;
+}
+
+function SeparatorIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M6 12L10 8L6 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export default function Breadcrumb({
+  customItems,
+  homeLabel = "Home",
+  separator = "/",
+}: BreadcrumbProps) {
+  const location = useLocation();
+
+  // Generate breadcrumb items from the current path
+  const generateItemsFromPath = (): BreadcrumbItem[] => {
+    const pathnames = location.pathname.split("/").filter((x) => x);
+
+    const items: BreadcrumbItem[] = [
+      { label: homeLabel, path: "/", isLast: pathnames.length === 0 },
+    ];
+
+    let currentPath = "";
+    pathnames.forEach((name, index) => {
+      currentPath += `/${name}`;
+      const isLast = index === pathnames.length - 1;
+
+      // Format the label (capitalize and replace hyphens)
+      let label = name.replace(/-/g, " ");
+      label = label.charAt(0).toUpperCase() + label.slice(1);
+
+      items.push({
+        label,
+        path: currentPath,
+        isLast,
+      });
+    });
+
+    return items;
+  };
+
+  const items = customItems || generateItemsFromPath();
+
+  return (
+    <nav className="flex items-center flex-wrap" aria-label="Breadcrumb">
+      <ol className="flex items-center flex-wrap gap-1">
+        {items.map((item, index) => (
+          <li key={item.path} className="flex items-center">
+            {index > 0 && (
+              <span className="text-gray-500 mx-1 text-sm">{separator}</span>
+            )}
+            {item.isLast ? (
+              <span className="text-[#2979FF] text-sm font-medium">
+                {item.label}
+              </span>
+            ) : (
+              <Link
+                to={item.path}
+                className="text-gray-400 hover:text-[#2979FF] text-sm transition-colors"
+              >
+                {item.label}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
