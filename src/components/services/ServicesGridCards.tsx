@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { services } from "../../data/Servicesdata";
 import type { Service } from "../../data/Servicesdata";
@@ -103,14 +103,12 @@ function ServiceCard({
 
 export default function ServicesGridCards() {
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
   useEffect(() => {
     if (isInView && !hasAnimated) {
       setHasAnimated(true);
-      setIsLoaded(true);
     }
   }, [isInView, hasAnimated]);
 

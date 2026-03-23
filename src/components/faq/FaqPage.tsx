@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import Button, { ArrowRightIcon } from "../button";
+import { ArrowRightIcon } from "../button";
 import { Mail, FileText, Layers, HelpCircle, X } from "lucide-react";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
@@ -121,8 +121,7 @@ const MobileSidebarDrawer: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   onLinkClick: (link: string) => void;
-  hasAnimated: boolean;
-}> = ({ isOpen, onClose, onLinkClick, hasAnimated }) => {
+}> = ({ isOpen, onClose, onLinkClick }) => {
   return (
     <>
       {/* Overlay */}
@@ -305,7 +304,6 @@ function AccordionItem({
 export default function FAQPage() {
   const navigate = useNavigate();
   const [hasAnimated, setHasAnimated] = useState<boolean>(false);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
@@ -313,7 +311,6 @@ export default function FAQPage() {
   useEffect(() => {
     if (isInView && !hasAnimated) {
       setHasAnimated(true);
-      setIsLoaded(true);
     }
   }, [isInView, hasAnimated]);
 
@@ -345,7 +342,6 @@ export default function FAQPage() {
         isOpen={isMobileDrawerOpen}
         onClose={() => setIsMobileDrawerOpen(false)}
         onLinkClick={handleSidebarLinkClick}
-        hasAnimated={hasAnimated}
       />
 
       {/* Hero Header - Matching BlogSinglePage Design */}

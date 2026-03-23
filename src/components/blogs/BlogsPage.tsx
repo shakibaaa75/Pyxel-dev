@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { blogPosts } from "../../data/BlogPost";
@@ -160,14 +160,12 @@ function BlogCard({
 
 export default function BlogsPage() {
   const [hasAnimated, setHasAnimated] = useState<boolean>(false);
-  const [isLoaded, setIsLoaded] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
   useEffect(() => {
     if (isInView && !hasAnimated) {
       setHasAnimated(true);
-      setIsLoaded(true);
     }
   }, [isInView, hasAnimated]);
 

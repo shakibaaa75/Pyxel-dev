@@ -75,11 +75,9 @@ const FaqAccordion: React.FC<{
 const MobileSidebarDrawer: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  item: any;
   detailRows: any[];
   onContactClick: () => void;
-  hasAnimated: boolean;
-}> = ({ isOpen, onClose, item, detailRows, onContactClick, hasAnimated }) => {
+}> = ({ isOpen, onClose, detailRows, onContactClick }) => {
   return (
     <>
       {/* Overlay */}
@@ -176,7 +174,6 @@ const PortfolioSinglePage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
@@ -184,7 +181,6 @@ const PortfolioSinglePage: React.FC = () => {
   useEffect(() => {
     if (isInView && !hasAnimated) {
       setHasAnimated(true);
-      setIsLoaded(true);
     }
   }, [isInView, hasAnimated]);
 
@@ -235,10 +231,8 @@ const PortfolioSinglePage: React.FC = () => {
       <MobileSidebarDrawer
         isOpen={isMobileDrawerOpen}
         onClose={() => setIsMobileDrawerOpen(false)}
-        item={item}
         detailRows={detailRows}
         onContactClick={() => navigate("/contact")}
-        hasAnimated={hasAnimated}
       />
 
       {/* Hero Header with Breadcrumb Design like Blog Page */}
