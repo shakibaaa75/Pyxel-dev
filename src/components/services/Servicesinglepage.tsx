@@ -137,17 +137,6 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 
 // ─── Main Content ─────────────────────────────────────────────────────────────
 function ServiceContent({ service }: { service: Service }) {
-  const words = service.title.split(" ");
-  const firstWord = words[0];
-  const restWords = words.slice(1).join(" ");
-
-  // Custom breadcrumb items for service page
-  const breadcrumbItems = [
-    { label: "Home", path: "/", isLast: false },
-    { label: "Services", path: "/services", isLast: false },
-    { label: service.title, path: "#", isLast: true },
-  ];
-
   return (
     <motion.div
       key={service.slug}
@@ -298,13 +287,6 @@ export default function ServiceSinglePage() {
   // Find service from URL slug; fall back to first service
   const activeService = services.find((s) => s.slug === slug) ?? services[0];
 
-  // Custom breadcrumb items for service page
-  const breadcrumbItems = [
-    { label: "Home", path: "/", isLast: false },
-    { label: "Services", path: "/services", isLast: false },
-    { label: activeService.title, path: "#", isLast: true },
-  ];
-
   // If slug doesn't match any service, redirect to first service
   useEffect(() => {
     if (slug && !services.find((s) => s.slug === slug)) {
@@ -324,9 +306,9 @@ export default function ServiceSinglePage() {
     if (isInView && !hasAnimated) setHasAnimated(true);
   }, [isInView, hasAnimated]);
 
-  const words = activeService.title.split(" ");
-  const firstWord = words[0];
-  const restWords = words.slice(1).join(" ");
+  const titleWords = activeService.title.split(" ");
+  const firstWord = titleWords[0];
+  const restWords = titleWords.slice(1).join(" ");
 
   return (
     <div
@@ -347,7 +329,13 @@ export default function ServiceSinglePage() {
           </h1>
           {/* Breadcrumb under title - Same as BlogSinglePage */}
           <div className="mt-2">
-            <Breadcrumb customItems={breadcrumbItems} />
+            <Breadcrumb
+              customItems={[
+                { label: "Home", path: "/", isLast: false },
+                { label: "Services", path: "/services", isLast: false },
+                { label: activeService.title, path: "#", isLast: true },
+              ]}
+            />
           </div>
         </motion.div>
 
