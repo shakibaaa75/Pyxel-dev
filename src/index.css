@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-html, body {
+html {
   overflow-x: hidden;
 }
 
-/* Add to your index.css or global stylesheet */
+body {
+  overflow-x: clip;
+}
 
-/* Mobile-first optimizations */

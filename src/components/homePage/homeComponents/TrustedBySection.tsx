@@ -7,6 +7,11 @@ interface Logo {
   svg: React.ReactNode;
 }
 
+interface TrustedBySectionProps {
+  className?: string;
+  gradientColor?: string; // Optional gradient color for overlays
+}
+
 const logos: Logo[] = [
   {
     id: 1,
@@ -144,7 +149,10 @@ const logos: Logo[] = [
   },
 ];
 
-const TrustedBySection = () => {
+const TrustedBySection: React.FC<TrustedBySectionProps> = ({
+  className = "",
+  gradientColor = "#161616", // Default to home page background
+}) => {
   const duplicatedLogos = [...logos, ...logos];
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -170,7 +178,9 @@ const TrustedBySection = () => {
   };
 
   return (
-    <section className="relative w-full bg-[#161616] pt-4 sm:pt-5 pb-8 sm:pb-10 md:pb-12 lg:pb-16 overflow-hidden flex flex-col items-center justify-center">
+    <section
+      className={`relative w-full pt-4 sm:pt-5 pb-8 sm:pb-10 md:pb-12 lg:pb-16 overflow-x-hidden flex flex-col items-center justify-center ${className}`}
+    >
       <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="mb-4 sm:mb-5 md:mb-6 lg:mb-8 text-center">
           <h2 className="font-['Montserrat'] text-white text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-medium tracking-tight">
@@ -190,8 +200,19 @@ const TrustedBySection = () => {
           }`}
           style={{ transitionDelay: "0.5s" }}
         >
-          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-20 md:w-24 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-20 md:w-24 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
+          {/* Dynamic gradient overlays */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-16 sm:w-20 md:w-24 z-10 pointer-events-none"
+            style={{
+              background: `linear-gradient(to right, ${gradientColor}, transparent)`,
+            }}
+          />
+          <div
+            className="absolute right-0 top-0 bottom-0 w-16 sm:w-20 md:w-24 z-10 pointer-events-none"
+            style={{
+              background: `linear-gradient(to left, ${gradientColor}, transparent)`,
+            }}
+          />
 
           <div className="flex overflow-hidden group">
             <motion.div

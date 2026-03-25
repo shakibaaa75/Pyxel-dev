@@ -15,14 +15,14 @@ const HomePage = () => {
   return (
     <>
       <HeroSection />
-      <TrustedBySection />
+      <TrustedBySection className="bg-[#161616]" />
       <ServicesSection />
       <PortfolioSection />
       <ToolsSection />
       <MethodologyComponent />
-      <ProudMoments />
-      <CreativeDesignsSection />
-      <TeamSection />
+      <ProudMoments className="bg-[#161616]" />
+      <CreativeDesignsSection className="bg-[#161616]" />
+      <TeamSection showAll={true} />
       <TestimonialSection />
       <BlogComponent />
     </>

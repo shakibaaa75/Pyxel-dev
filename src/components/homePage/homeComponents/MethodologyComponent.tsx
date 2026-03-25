@@ -85,7 +85,7 @@ export default function MethodologyComponent() {
     // Use clip-x on a non-scrolling parent instead if you need to hide overflow.
     <div
       className="h-auto bg-[#161616] text-white py-12 sm:py-16 lg:py-20"
-      style={{ fontFamily: "Montserrat, sans-serif", clipPath: "inset(0)" }}
+      style={{ fontFamily: "Montserrat, sans-serif" }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');

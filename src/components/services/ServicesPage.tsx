@@ -6,7 +6,7 @@ export const ServicesPage = () => {
   return (
     <>
       <ServicesGridCards />
-      <CreativeDesignsSection />
+      <CreativeDesignsSection className="bg-[#111111]" />
       <ToolsSection />
     </>
   );

@@ -49,6 +49,9 @@ const HomePage = lazy(
 );
 const AboutPage = lazy(() => import("./components/about/AboutPage"));
 const ServicesPage = lazy(() => import("./components/services/ServicesPage"));
+const ServiceSinglePage = lazy(
+  () => import("./components/services/Servicesinglepage"),
+);
 const BlogsPage = lazy(() => import("./components/blogs/BlogsPage"));
 const BlogSinglePage = lazy(() => import("./components/blogs/BlogSinglePage"));
 const FaqPage = lazy(() => import("./components/faq/FaqPage"));
@@ -104,16 +107,13 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/services/:slug" element={<ServiceSinglePage />} />
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/blogs/:slug" element={<BlogSinglePage />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/portfolio" element={<PortfolioArchivePage />} />
-            <Route
-              path="/portfolio/:slug"
-              element={<PortfolioSinglePage />}
-            />{" "}
-            {/* ← slug not :id */}
+            <Route path="/portfolio/:slug" element={<PortfolioSinglePage />} />
             <Route
               path="*"
               element={

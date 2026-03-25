@@ -9,6 +9,12 @@ interface StatItemProps {
   isLast?: boolean;
 }
 
+interface CreativeDesignsSectionProps {
+  className?: string;
+  gradientStart?: string;
+  gradientEnd?: string;
+}
+
 const AnimatedCounter: React.FC<{
   target: number;
   suffix?: string;
@@ -77,7 +83,11 @@ const StatItem: React.FC<StatItemProps> = ({
   );
 };
 
-const CreativeDesignsSection: React.FC = () => {
+const CreativeDesignsSection: React.FC<CreativeDesignsSectionProps> = ({
+  className = "",
+  gradientStart = "#0944A0",
+  gradientEnd = "#2A7DFF",
+}) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
@@ -93,7 +103,7 @@ const CreativeDesignsSection: React.FC = () => {
   return (
     <div
       ref={sectionRef}
-      className="bg-[#161616] flex items-center justify-center py-8 sm:py-14 md:py-16 lg:py-20 xl:py-[80px] overflow-x-hidden"
+      className={`flex items-center justify-center py-8 sm:py-14 md:py-16 lg:py-20 xl:py-[80px] overflow-x-hidden ${className}`}
     >
       <motion.section
         initial={{ opacity: 0, y: 50 }}
@@ -101,7 +111,12 @@ const CreativeDesignsSection: React.FC = () => {
         transition={{ duration: 0.8, ease: smoothEase }}
         className="max-w-[1400px] mx-auto w-full px-3 sm:px-6 lg:px-8 xl:px-12 relative z-10"
       >
-        <div className="w-full bg-gradient-to-br from-[#0944A0] to-[#2A7DFF] rounded-2xl sm:rounded-[24px] lg:rounded-[28px] py-6 sm:py-10 lg:py-14 px-4 sm:px-6 lg:px-[60px] flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 lg:gap-10 relative overflow-hidden">
+        <div
+          className="w-full rounded-2xl sm:rounded-[24px] lg:rounded-[28px] py-6 sm:py-10 lg:py-14 px-4 sm:px-6 lg:px-[60px] flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 lg:gap-10 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`,
+          }}
+        >
           {/* Background decoration for visual interest */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
@@ -228,8 +243,13 @@ const CreativeDesignsSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Middle blue circle */}
-            <div className="absolute w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] rounded-full bg-[#3b7ef5] z-10" />
+            {/* Middle blue circle - Now dynamic to match gradient */}
+            <div
+              className="absolute w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] rounded-full z-10"
+              style={{
+                background: `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`,
+              }}
+            />
 
             {/* Inner dark circle with arrow */}
             <div className="absolute w-[60px] h-[60px] sm:w-[75px] sm:h-[75px] md:w-[95px] md:h-[95px] lg:w-[110px] lg:h-[110px] rounded-full bg-[#0f0f10] flex items-center justify-center z-20 cursor-pointer hover:scale-105 transition-transform duration-300">

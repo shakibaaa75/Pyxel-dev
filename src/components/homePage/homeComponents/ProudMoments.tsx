@@ -10,6 +10,11 @@ interface Milestone {
   description: string;
 }
 
+interface ProudMomentsProps {
+  className?: string;
+  accentColor?: string;
+}
+
 const milestones: Milestone[] = [
   {
     id: "1",
@@ -69,7 +74,8 @@ const MilestoneCard = memo<{
   milestone: Milestone;
   index: number;
   hasAnimated: boolean;
-}>(({ milestone, index, hasAnimated }) => {
+  accentColor?: string;
+}>(({ milestone, index, hasAnimated, accentColor = "#2A7DFF" }) => {
   // Pre-calculate delays
   const cardDelay = hasAnimated ? index * 0.08 + 0.2 : 0;
   const metaDelay = hasAnimated ? index * 0.08 + 0.3 : 0;
@@ -89,7 +95,10 @@ const MilestoneCard = memo<{
         animate={hasAnimated ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
         transition={{ ...springTransition, delay: metaDelay }}
       >
-        <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-[#2A7DFF]" />
+        <Sparkles
+          className="w-3 h-3 sm:w-4 sm:h-4"
+          style={{ color: accentColor }}
+        />
         <span className="text-gray-400 text-xs sm:text-sm font-medium font-['Rethink_Sans']">
           {milestone.year}
         </span>
@@ -119,7 +128,10 @@ const MilestoneCard = memo<{
 MilestoneCard.displayName = "MilestoneCard";
 
 // Optimized text animation - no per-letter splitting
-const AnimatedHeading = memo<{ hasAnimated: boolean }>(({ hasAnimated }) => {
+const AnimatedHeading = memo<{
+  hasAnimated: boolean;
+  accentColor?: string;
+}>(({ hasAnimated, accentColor = "#2A7DFF" }) => {
   return (
     <h2 className="font-['Montserrat'] font-semibold text-white mb-6 sm:mb-8 text-[32px] sm:text-[42px] md:text-[48px] lg:text-[54px] leading-tight lg:leading-[1.2]">
       <motion.span
@@ -131,7 +143,8 @@ const AnimatedHeading = memo<{ hasAnimated: boolean }>(({ hasAnimated }) => {
         Proud Moments
       </motion.span>
       <motion.span
-        className="block text-[#2A7DFF] mt-2 sm:mt-3"
+        className="block mt-2 sm:mt-3"
+        style={{ color: accentColor }}
         initial={{ opacity: 0, y: 30 }}
         animate={hasAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
         transition={{ duration: 0.6, delay: 0.35, ease: smoothEase }}
@@ -144,18 +157,20 @@ const AnimatedHeading = memo<{ hasAnimated: boolean }>(({ hasAnimated }) => {
 
 AnimatedHeading.displayName = "AnimatedHeading";
 
-const ProudMoments: React.FC = () => {
+const ProudMoments: React.FC<ProudMomentsProps> = ({
+  className = "",
+  accentColor = "#2A7DFF",
+}) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, {
     once: true,
-    amount: 0.1, // Lower threshold for earlier trigger
-    margin: "50px", // Start slightly before in view
+    amount: 0.1,
+    margin: "50px",
   });
 
   useEffect(() => {
     if (isInView && !hasAnimated) {
-      // Use requestAnimationFrame for smoother state update
       requestAnimationFrame(() => {
         setHasAnimated(true);
       });
@@ -175,21 +190,19 @@ const ProudMoments: React.FC = () => {
           milestone={milestone}
           index={index}
           hasAnimated={hasAnimated}
+          accentColor={accentColor}
         />
       </div>
     ));
-  }, [hasAnimated]);
+  }, [hasAnimated, accentColor]);
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-[#161616] py-12 sm:py-16 lg:py-20 overflow-hidden will-change-transform"
+      className={`relative w-full py-12 sm:py-16 lg:py-20 overflow-hidden ${className}`}
     >
       {/* Optimized rotating image - CSS animation instead of Framer Motion */}
-      <div
-        className="absolute -top-20 -left-20 w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 pointer-events-none z-0 opacity-30 animate-[spin_20s_linear_infinite]"
-        style={{ willChange: "transform" }}
-      >
+      <div className="absolute -top-20 -left-20 w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 pointer-events-none z-0 opacity-30 animate-[spin_20s_linear_infinite]">
         <img
           src="/images/roted.png"
           alt=""
@@ -201,24 +214,30 @@ const ProudMoments: React.FC = () => {
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-          {/* Left side - No longer sticky */}
+          {/* Left side */}
           <div className="lg:col-span-5 relative">
             <div className="flex flex-col">
               <motion.div
-                className="flex items-center gap-2 text-[#2A7DFF] mb-4 sm:mb-6"
+                className="flex items-center gap-2 mb-4 sm:mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={
                   hasAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                 }
                 transition={{ duration: 0.5, delay: 0.1, ease: smoothEase }}
               >
-                <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="font-['Rethink_Sans'] text-xs sm:text-sm font-medium tracking-wide uppercase">
+                <Sparkles
+                  className="w-3 h-3 sm:w-4 sm:h-4"
+                  style={{ color: accentColor }}
+                />
+                <span className="font-['Rethink_Sans'] text-xs sm:text-sm font-medium tracking-wide uppercase text-gray-400">
                   Our Achievements
                 </span>
               </motion.div>
 
-              <AnimatedHeading hasAnimated={hasAnimated} />
+              <AnimatedHeading
+                hasAnimated={hasAnimated}
+                accentColor={accentColor}
+              />
 
               <motion.p
                 className="font-['Rethink_Sans'] text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed mb-8 sm:mb-10 max-w-lg"

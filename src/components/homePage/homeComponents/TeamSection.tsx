@@ -1,12 +1,34 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Facebook, Twitter, Linkedin } from "lucide-react";
+import Button, { ArrowRightIcon } from "../../button";
 
 interface TeamMember {
   id: number;
   name: string;
   role: string;
   image: string;
+}
+
+interface TeamSectionProps {
+  limit?: number;
+  showAll?: boolean;
+  // Background customization
+  bgColor?: string;
+  className?: string;
+  // Header customization props
+  customHeader?: React.ReactNode;
+  showDefaultHeader?: boolean;
+  headerTitle?: string;
+  headerHighlight?: string;
+  breadcrumbItems?: Array<{ label: string; path?: string; isLast?: boolean }>;
+  headerBgColor?: string;
+  accentColor?: string;
+  // Button props
+  showButton?: boolean;
+  buttonText?: string;
+  buttonLink?: string;
+  onButtonClick?: () => void;
 }
 
 const teamMembers: TeamMember[] = [
@@ -70,7 +92,171 @@ const teamMembers: TeamMember[] = [
 
 const smoothEase: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
-const TeamSection: React.FC = () => {
+// Default header component
+const DefaultHeader: React.FC<{
+  hasAnimated: boolean;
+  isLoaded: boolean;
+  headerTitle: string;
+  headerHighlight: string;
+  breadcrumbItems: Array<{ label: string; path?: string; isLast?: boolean }>;
+  headerBgColor: string;
+  accentColor: string;
+  showButton?: boolean;
+  buttonText?: string;
+  buttonLink?: string;
+  onButtonClick?: () => void;
+  renderAnimatedText: (text: string, baseDelay?: number) => React.ReactNode;
+}> = ({
+  hasAnimated,
+  isLoaded,
+  headerTitle,
+  headerHighlight,
+  breadcrumbItems,
+  headerBgColor,
+  accentColor,
+  showButton = false,
+  buttonText = "Get In Touch",
+  buttonLink,
+  onButtonClick,
+  renderAnimatedText,
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={hasAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ duration: 0.6, ease: smoothEase }}
+      className="mb-8 sm:mb-10 lg:mb-12"
+    >
+      <div
+        className="rounded-2xl p-7 md:p-[28px_36px_24px_36px] w-full box-border"
+        style={{ backgroundColor: headerBgColor }}
+      >
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div className="flex-1">
+            {/* Main Heading with letter-by-letter animation */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
+              <span className="text-white block sm:inline">
+                {renderAnimatedText(headerTitle + " ", 0.2)}
+              </span>
+              <span className="block sm:inline" style={{ color: accentColor }}>
+                {renderAnimatedText(
+                  headerHighlight,
+                  0.2 + headerTitle.length * 0.01,
+                )}
+              </span>
+            </h2>
+
+            {/* Breadcrumb with staggered animation */}
+            {breadcrumbItems.length > 0 && (
+              <div className="flex items-center gap-2 mt-3 text-sm text-gray-400">
+                {breadcrumbItems.map((item, index) => (
+                  <React.Fragment key={item.label}>
+                    {index > 0 && (
+                      <span
+                        className={`transition-all duration-200 ${
+                          isLoaded
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4"
+                        }`}
+                        style={{ transitionDelay: `${0.4 + index * 0.05}s` }}
+                      >
+                        /
+                      </span>
+                    )}
+                    {item.isLast ? (
+                      <span
+                        className={`transition-all duration-200 ${
+                          isLoaded
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4"
+                        }`}
+                        style={{
+                          color: accentColor,
+                          transitionDelay: `${0.4 + index * 0.05}s`,
+                        }}
+                      >
+                        {item.label}
+                      </span>
+                    ) : (
+                      <a
+                        href={item.path}
+                        className={`hover:text-white transition-colors transition-all duration-200 ${
+                          isLoaded
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4"
+                        }`}
+                        style={{ transitionDelay: `${0.4 + index * 0.05}s` }}
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Button */}
+          {showButton && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={
+                hasAnimated
+                  ? { opacity: 1, scale: 1 }
+                  : { opacity: 0, scale: 0.9 }
+              }
+              transition={{ duration: 0.5, delay: 0.5, ease: smoothEase }}
+              className="flex-shrink-0"
+            >
+              {buttonLink ? (
+                <Button
+                  size="default"
+                  variant="primary"
+                  href={buttonLink}
+                  className="w-full sm:w-auto"
+                >
+                  {buttonText}
+                  <ArrowRightIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+              ) : (
+                <Button
+                  size="default"
+                  variant="primary"
+                  onClick={onButtonClick}
+                  className="w-full sm:w-auto"
+                >
+                  {buttonText}
+                  <ArrowRightIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const TeamSection: React.FC<TeamSectionProps> = ({
+  limit = 4,
+  showAll = false,
+  bgColor = "#161616",
+  className = "",
+  customHeader,
+  showDefaultHeader = true,
+  headerTitle = "The minds",
+  headerHighlight = "behind the magic",
+  breadcrumbItems = [
+    { label: "Home", path: "/", isLast: false },
+    { label: "Team", path: "/team", isLast: true },
+  ],
+  headerBgColor = "#1a1b1f",
+  accentColor = "#2A7DFF",
+  showButton = false,
+  buttonText = "Get In Touch",
+  buttonLink,
+  onButtonClick,
+}) => {
   const [hasAnimated, setHasAnimated] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -82,6 +268,9 @@ const TeamSection: React.FC = () => {
       setIsLoaded(true);
     }
   }, [isInView, hasAnimated]);
+
+  // Determine which team members to display
+  const displayedMembers = showAll ? teamMembers : teamMembers.slice(0, limit);
 
   const renderAnimatedText = (text: string, baseDelay = 0) => {
     return text.split("").map((letter, index) => {
@@ -103,65 +292,33 @@ const TeamSection: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-[#161616] py-12 sm:py-16 lg:py-20 overflow-hidden"
+      className={`relative w-full py-12 sm:py-16 lg:py-20 overflow-hidden ${className}`}
+      style={{ backgroundColor: bgColor }}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
-        {/* Header Section with animated text like Methodology */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={hasAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, ease: smoothEase }}
-          className="mb-8 sm:mb-10 lg:mb-12"
-        >
-          <div className="bg-[#1a1b1f] rounded-2xl p-7 md:p-[28px_36px_24px_36px] w-full box-border">
-            {/* Main Heading with letter-by-letter animation */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
-              <span className="text-white block sm:inline">
-                {renderAnimatedText("The minds ", 0.2)}
-              </span>
-              <span className="text-[#2A7DFF] block sm:inline">
-                {renderAnimatedText(
-                  "behind the magic",
-                  0.2 + "The minds ".length * 0.01,
-                )}
-              </span>
-            </h2>
+        {/* Header Section - Either custom or default */}
+        {customHeader ? (
+          customHeader
+        ) : showDefaultHeader ? (
+          <DefaultHeader
+            hasAnimated={hasAnimated}
+            isLoaded={isLoaded}
+            headerTitle={headerTitle}
+            headerHighlight={headerHighlight}
+            breadcrumbItems={breadcrumbItems}
+            headerBgColor={headerBgColor}
+            accentColor={accentColor}
+            showButton={showButton}
+            buttonText={buttonText}
+            buttonLink={buttonLink}
+            onButtonClick={onButtonClick}
+            renderAnimatedText={renderAnimatedText}
+          />
+        ) : null}
 
-            {/* Breadcrumb with staggered animation */}
-            <div className="flex items-center gap-2 mt-3 text-sm text-gray-400">
-              {["Home", "Team"].map((item, index) => (
-                <React.Fragment key={item}>
-                  {index > 0 && (
-                    <span
-                      className={`transition-all duration-200 ${
-                        isLoaded
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 translate-y-4"
-                      }`}
-                      style={{ transitionDelay: `${0.4 + index * 0.05}s` }}
-                    >
-                      /
-                    </span>
-                  )}
-                  <span
-                    className={`hover:text-white transition-colors cursor-pointer transition-all duration-200 ${
-                      isLoaded
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-4"
-                    }`}
-                    style={{ transitionDelay: `${0.4 + index * 0.05}s` }}
-                  >
-                    {item}
-                  </span>
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Team Grid with staggered animations like Methodology steps */}
+        {/* Team Grid with staggered animations */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-          {teamMembers.map((member, index) => (
+          {displayedMembers.map((member, index) => (
             <motion.div
               key={member.id}
               initial={{ opacity: 0, y: 50, scale: 0.95 }}

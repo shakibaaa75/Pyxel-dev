@@ -50,71 +50,74 @@ function BlogCard({
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.95 }}
-      animate={
-        hasAnimated
-          ? { opacity: 1, y: 0, scale: 1 }
-          : { opacity: 0, y: 50, scale: 0.95 }
-      }
-      transition={{
-        duration: 0.6,
-        delay: hasAnimated ? index * 0.08 + 0.3 : 0,
-        ease: smoothEase,
-      }}
-      className={`
-        bg-[#1a1a1a] rounded-[20px] overflow-hidden flex flex-col 
-        transition-all duration-500 ease-out 
-        ${!isMobile && "hover:-translate-y-1"}
-      `}
+    <Link
+      to={`/blogs/${post.slug}`}
+      className="block no-underline"
       onMouseEnter={() => !isMobile && setIsHovered(true)}
       onMouseLeave={() => !isMobile && setIsHovered(false)}
     >
-      {/* Image */}
-      <Link to={`/blogs/${post.slug}`} className="block overflow-hidden">
-        <div className="w-full h-[200px] md:h-[220px] overflow-hidden bg-gray-800 relative">
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-700 animate-pulse" />
-          )}
-          <motion.img
-            src={post.image}
-            alt={post.title}
-            className={`w-full h-full object-cover transition-all duration-700 ease-out
-              ${imageLoaded ? "opacity-100" : "opacity-0"}
-            `}
-            style={{
-              transform: isHovered && !isMobile ? "scale(1.06)" : "scale(1)",
-            }}
-            loading="lazy"
-            onLoad={() => setImageLoaded(true)}
-            onError={() => {
-              console.error("Image failed to load:", post.image);
-              setImageLoaded(true);
-            }}
-            initial={{ scale: 1.1 }}
-            animate={hasAnimated ? { scale: 1 } : { scale: 1.1 }}
-            transition={{
-              duration: 0.7,
-              delay: hasAnimated ? index * 0.08 + 0.35 : 0,
-              ease: smoothEase,
-            }}
-          />
-        </div>
-      </Link>
-
-      {/* Content */}
       <motion.div
-        className="p-4 md:p-6 flex flex-col flex-1"
-        initial={{ y: 20, opacity: 0 }}
-        animate={hasAnimated ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
+        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+        animate={
+          hasAnimated
+            ? { opacity: 1, y: 0, scale: 1 }
+            : { opacity: 0, y: 50, scale: 0.95 }
+        }
         transition={{
-          duration: 0.5,
-          delay: hasAnimated ? index * 0.08 + 0.45 : 0,
+          duration: 0.6,
+          delay: hasAnimated ? index * 0.08 + 0.3 : 0,
           ease: smoothEase,
         }}
+        className={`
+          bg-[#1a1a1a] rounded-[20px] overflow-hidden flex flex-col 
+          transition-all duration-500 ease-out cursor-pointer
+          ${!isMobile && "hover:-translate-y-1"}
+        `}
       >
-        {/* Title */}
-        <Link to={`/blogs/${post.slug}`} className="no-underline">
+        {/* Image */}
+        <div className="block overflow-hidden">
+          <div className="w-full h-[200px] md:h-[220px] overflow-hidden bg-gray-800 relative">
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-700 animate-pulse" />
+            )}
+            <motion.img
+              src={post.image}
+              alt={post.title}
+              className={`w-full h-full object-cover transition-all duration-700 ease-out
+                ${imageLoaded ? "opacity-100" : "opacity-0"}
+              `}
+              style={{
+                transform: isHovered && !isMobile ? "scale(1.06)" : "scale(1)",
+              }}
+              loading="lazy"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => {
+                console.error("Image failed to load:", post.image);
+                setImageLoaded(true);
+              }}
+              initial={{ scale: 1.1 }}
+              animate={hasAnimated ? { scale: 1 } : { scale: 1.1 }}
+              transition={{
+                duration: 0.7,
+                delay: hasAnimated ? index * 0.08 + 0.35 : 0,
+                ease: smoothEase,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Content */}
+        <motion.div
+          className="p-4 md:p-6 flex flex-col flex-1"
+          initial={{ y: 20, opacity: 0 }}
+          animate={hasAnimated ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
+          transition={{
+            duration: 0.5,
+            delay: hasAnimated ? index * 0.08 + 0.45 : 0,
+            ease: smoothEase,
+          }}
+        >
+          {/* Title */}
           <h3
             className="text-[15px] md:text-[17px] font-bold leading-[1.45] mb-4 md:mb-5 transition-colors duration-300 line-clamp-2"
             style={{
@@ -123,38 +126,37 @@ function BlogCard({
           >
             {post.title}
           </h3>
-        </Link>
 
-        {/* Divider */}
-        <div className="h-px bg-white/10 mb-3 md:mb-4 w-full" />
+          {/* Divider */}
+          <div className="h-px bg-white/10 mb-3 md:mb-4 w-full" />
 
-        {/* Footer Row */}
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-gray-500 text-xs md:text-sm">{post.date}</span>
-          <Link
-            to={`/blogs/${post.slug}`}
-            className="group inline-flex items-center gap-1 md:gap-2 text-[#2979FF] text-xs md:text-sm font-semibold no-underline transition-all duration-300 hover:gap-2 md:hover:gap-3 min-h-[44px] md:min-h-0"
-          >
-            Read More
-            <motion.span
-              className={`
-                rounded-full w-6 h-6 md:w-7 md:h-7 flex items-center justify-center flex-shrink-0 
-                transition-all duration-300
-                ${!isMobile && isHovered ? "bg-[#2979FF] rotate-0" : "bg-white -rotate-45"}
-              `}
-              whileHover={!isMobile ? { scale: 1.1 } : {}}
-              whileTap={!isMobile ? { scale: 0.95 } : {}}
-            >
-              <ArrowIcon
-                className={`w-3 h-3 md:w-4 md:h-4 transition-colors duration-300 ${
-                  !isMobile && isHovered ? "text-white" : "text-[#2979FF]"
-                }`}
-              />
-            </motion.span>
-          </Link>
-        </div>
+          {/* Footer Row */}
+          <div className="flex items-center justify-between mt-auto">
+            <span className="text-gray-500 text-xs md:text-sm">
+              {post.date}
+            </span>
+            <div className="group inline-flex items-center gap-1 md:gap-2 text-[#2979FF] text-xs md:text-sm font-semibold transition-all duration-300">
+              Read More
+              <motion.span
+                className={`
+                  rounded-full w-6 h-6 md:w-7 md:h-7 flex items-center justify-center flex-shrink-0 
+                  transition-all duration-300
+                  ${!isMobile && isHovered ? "bg-[#2979FF] rotate-0" : "bg-white -rotate-45"}
+                `}
+                whileHover={!isMobile ? { scale: 1.1 } : {}}
+                whileTap={!isMobile ? { scale: 0.95 } : {}}
+              >
+                <ArrowIcon
+                  className={`w-3 h-3 md:w-4 md:h-4 transition-colors duration-300 ${
+                    !isMobile && isHovered ? "text-white" : "text-[#2979FF]"
+                  }`}
+                />
+              </motion.span>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </Link>
   );
 }
 

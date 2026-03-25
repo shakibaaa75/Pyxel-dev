@@ -22,6 +22,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   backgroundImage = "/images/HerosecBg.png",
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  // FIX: Disable parallax on mobile. CSS transform on any ancestor element creates
+  // a new stacking context which breaks position:sticky on the header above.
+  // On mobile (<1024px) we skip the y/opacity motion values entirely.
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const { scrollY } = useScroll();
 
@@ -53,7 +64,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section className="relative w-full h-[55vh] md:h-[70vh] lg:h-[75vh] min-h-[500px] bg-gray-900 overflow-hidden flex items-center">
-      <motion.div className="absolute inset-0 z-0" style={{ y: backgroundY }}>
+      <motion.div
+        className="absolute inset-0 z-0"
+        style={{ y: isMobile ? 0 : backgroundY }}
+      >
         <img
           src={backgroundImage}
           alt="Professional woman working late"
@@ -68,7 +82,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
       <motion.div
         className="absolute bottom-0 left-0 right-0 z-[1]"
-        style={{ y: overlayY }}
+        style={{ y: isMobile ? 0 : overlayY }}
       >
         <img
           src="/images/Bgoverlay.png"
@@ -80,8 +94,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       <motion.div
         className="relative z-10 w-full"
         style={{
-          y: contentY,
-          opacity: opacity,
+          y: isMobile ? 0 : contentY,
+          opacity: isMobile ? 1 : opacity,
         }}
       >
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
