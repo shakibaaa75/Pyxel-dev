@@ -78,10 +78,7 @@ const PricingPage: React.FC = () => {
   ];
 
   return (
-    <div
-      ref={sectionRef}
-      className="min-h-screen bg-[#111111] font-['Montserrat']"
-    >
+    <div ref={sectionRef} className=" bg-[#111111] font-['Montserrat']">
       {/* Hero Header with Dynamic Breadcrumb */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-8 sm:pt-10 pb-12 sm:pb-16">
         <motion.div
